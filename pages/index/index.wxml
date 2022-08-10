@@ -1,0 +1,49 @@
+<!-- 占位符 -->
+<view class="zhanwei"></view>
+<!-- 头部，包括标题，搜索，抽屉 -->
+<view class="head">
+  <view id="title">Justice_eternal</view>
+
+  <!-- 搜索框 -->
+  <input type="text" id="keyword" placeholder="请告诉JE酱~想要什么谱子" bindfocus="drawer_show" bindblur="drawer_hide" bindconfirm="searchGithub" bindinput="getkeyword"/>
+  <image id="icon-search" src="../../image/search.png" bindtap="searchGithub"></image>
+
+  <!-- 搜索方式抽屉 -->
+  <view id="drawer" style="height:{{drawerMode.drawerHeight(drawer_mode)}}; pointer-events: {{drawerMode.PE(drawer_mode)}}; transition-delay: {{drawerMode.drawerDelay(drawer_mode)}};">
+
+    <button class="method" style="opacity: {{drawerMode.methodOpacity(drawer_mode)}}; transition-delay: {{drawerMode.methodDelay(drawer_mode)}};" bindtap="searchGithub">GitHub曲谱库 ✈</button>
+    <button class="method" style="opacity: {{drawerMode.methodOpacity(drawer_mode)}}; transition-delay: {{drawerMode.methodDelay(drawer_mode)}};" bindtap="searchAcgmuse">AcgMuse论坛  ✈</button>
+
+  </view>
+</view>
+<!-- 曲谱列表 -->
+<view class="list" style="z-index: 0;">
+  <view wx:if="{{!newlist.length}}">呜呜呜不知道为什么连接失败了</view>
+  <view class="card" wx:for="{{newlist}}" wx:key="title" bindtap="tapCard" data-pu="{{index}}">{{item.title}}</view>
+</view>
+<!-- drawer动画处理 -->
+<wxs module="drawerMode">
+/* 传入mode：    true     false
+应该返回
+height:         0rpx      210px
+opacity:        0         1
+pointer-events: none      auto
+method-delay:   0.1s      0.25s
+drawer-delay:   0.2s      0s  
+*/
+  module.exports.drawerDelay=function(mode){
+    return mode?"0s":"0.2s";
+  }
+  module.exports.methodDelay=function(mode){
+    return mode?"0.25s":"0.1s";
+  }
+  module.exports.PE=function(mode){
+    return mode?"auto":"none";
+  }
+  module.exports.methodOpacity=function(mode){
+    return mode?1:0;
+  }
+  module.exports.drawerHeight=function(mode){
+    return mode?"210rpx":"0rpx";
+  }
+</wxs>

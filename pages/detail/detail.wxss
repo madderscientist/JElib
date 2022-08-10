@@ -1,0 +1,23 @@
+.basicInf{
+  color: #8181ee;
+}
+.bt{
+  width: 40%;
+  font-weight: bold;
+  font-size: 36rpx;
+}
+.bt:active{
+  background-color: #8181ee;
+}
+.floatbutton{
+  position: fixed;
+  bottom: 10vw;
+  right: 5vw;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  line-height: 120rpx;
+  background-color: #8181ee;
+  text-align: center;
+  box-shadow:  6rpx 6rpx 12rpx rgba(0, 0, 0, 0.4);
+}

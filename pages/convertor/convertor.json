@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "convert": "../../components/convert/convert"
+  },
+  "navigationBarTitleText": "转调器"
+}

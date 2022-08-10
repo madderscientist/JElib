@@ -1,0 +1,5 @@
+<view class="list">
+  <view wx:if="{{!result.length}}">呜呜呜不知道为什么连接失败了</view>
+  <view class="card" wx:for="{{result}}" wx:key="created_at" bindtap="tapCard" data-pu="{{index}}">{{item.title}}</view>
+</view>
+<!-- <image wx:if="!result" src="notfind"></image> -->

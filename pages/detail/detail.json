@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "wemark": "../../components/wemark/wemark",
+    "convert": "../../components/convert/convert"
+  }
+}

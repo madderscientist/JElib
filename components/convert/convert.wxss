@@ -1,0 +1,36 @@
+@import "../../app.wxss";
+.convert{
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.extremeToneShow{
+  margin: 4rpx;
+}
+.in{
+  width: 100%;
+  height: 40vh;
+  background-color: white;
+  border:4rpx solid #8181EE;
+  padding: 20rpx 26rpx;
+  border-radius: 12rpx;
+}
+.lineview{
+  width: 100%;
+  display: flex;
+  margin: 6rpx 0px;
+  align-items: center;
+}
+.bt{
+  margin: 0px 6rpx;
+  flex-grow: 1;
+}
+.t{
+  border-radius: 12rpx;
+  border: 2rpx solid #f0f0f0;
+  width: 25%;
+  height: 76rpx;
+  padding: 0px 6rpx 0px 16rpx;
+  margin: 0px 6rpx 0px 6rpx;
+}

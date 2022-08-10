@@ -1,0 +1,17 @@
+<!-- markdown显示器 -->
+<wemark id="md" md="{{md}}" link highlight type="wemark" style="width: 95%;" alreadyData="{{al}}" bind:sendDataUp="showpannel"></wemark>
+<view class="basicInf" wx:if="{{md}}">{{user}}创建于{{created_at}}</view>
+<!-- 悬浮按钮 -->
+<view class="floatbutton" bindtap="like">{{love}}</view>
+<!-- 弹出的转调器 -->
+<page-container
+  show="{{pannelShow}}"
+  position="top"
+  round="true"
+  bind:afterleave="closePannel"
+  custom-style="width:96vw; margin:0px 2vw 2vw; padding: 0px 3vw 3vh; display: flex; justify-content: space-around; flex-wrap: wrap;"
+>
+<convert id="Convert" pu="{{pannelContent}}" style="width: 100%;"></convert>
+<view class="bt" bindtap="closePannel">取 消</view>
+<view class="bt" bindtap="confirm">确 定</view>
+</page-container>
