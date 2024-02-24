@@ -1,6 +1,11 @@
+<div align="center">
+    <img width="240" src="https://album.biliimg.com/bfs/new_dyn/a7873661e3ba9607bf861655da6e2c8b290251303.jpg@1048w_!web-dynamic.avif" alt="小程序码"><br>
+  由于没有做微信的付费认证，现在只能通过二维码访问了……
+</div>
+
 # JElib
-【微信小程序】justice_eternal吧：acg曲谱库
-小程序名：Je曲谱库
+【微信小程序】justice_eternal吧的acg曲谱库<br>
+小程序名：**Je曲谱库**<br>
 使用了两个大佬的组件：
 - [wemark:markdown显示组件](https://github.com/TooBug/wemark)
 - [wechat-select:下拉框组件](https://github.com/SimbaOvO/wechat-select)
