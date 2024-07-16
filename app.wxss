@@ -1,9 +1,10 @@
 /**app.wxss**/
-page{
+page {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .container {
   height: 100%;
   display: flex;
@@ -12,8 +13,9 @@ page{
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
-} 
-.card{
+}
+
+.card {
   background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(50px);
 
@@ -32,28 +34,32 @@ page{
 
   transition: all 0.15s;
 }
-.card:active{
+
+.card:active {
   backdrop-filter: blur(10px);
-  color: rgb(129, 129,238);
+  color: rgb(129, 129, 238);
 }
-.list{
+
+.list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
   padding: 12rpx 0rpx;
 }
-.bt{
+
+.bt {
   height: 80rpx;
   line-height: 80rpx;
   background-color: #8181eed0;
   color: white;
   font-size: 34rpx;
   text-align: center;
-  border-radius: 20rpx;
+  border-radius: 16rpx;
   padding: 0px 20rpx;
   transition: 0.15s;
 }
-.bt:active{
+
+.bt:active {
   background-color: #8181ee;
 }

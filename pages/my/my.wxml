@@ -1,10 +1,13 @@
 <view class="bg"></view>
 <view class="box1">
   <view class="urlbox">
-    <view class="url" bindtap="copyurl" data-url="https://github.com/zytx121/je/issues">谱库地址</view>
-    <view class="url" bindtap="copyurl" data-url="https://www.acgmuse.com/">论坛地址</view>
+    <view class="url url-theme" bindtap="copyurl" data-url="https://github.com/zytx121/je/issues">谱库地址</view>
+    <view class="url url-theme" bindtap="copyurl" data-url="https://www.acgmuse.com/">论坛地址</view>
   </view>
-  <navigator url="/pages/convertor/convertor" open-type="navigate" class="tool">转调器</navigator>
+  <view class="urlbox">
+    <navigator url="/pages/convertor/convertor" open-type="navigate" class="url nav-theme">JE转调器</navigator>
+    <navigator url="/pages/JPreco/JPreco" open-type="navigate" class="url nav-theme">简谱转调器</navigator>
+  </view>
 </view>
 
 <view class="subtitle">我的曲谱</view>

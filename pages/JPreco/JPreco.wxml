@@ -1,0 +1,24 @@
+<view bind:tap="chooseImg" class="bt topbtn">选择图片</view>
+<text style="display: {{showTools=='none'? 'block' : 'none'}}; text-align: center; width: 100%;">图片越大，分析越慢，请耐心等待
+宽度800像素以上的图片简谱识别效果较好
+如果一直卡在"分析中"，请重新加载本页面
+</text>
+<view style="display: {{showTools}}; width: 100%;">
+    <view class="lineview">
+        <view bind:tap="down1" class="bt">降半音</view>
+        <view bind:tap="up1" class="bt">升半音</view>
+    </view>
+
+    <view class="lineview">
+        <select bind:select="select_from" options="{{ToneArray}}" limit="3.55" default="{{picker1}}"></select>
+        <view>到</view>
+        <select bind:select="select_to" options="{{ToneArray}}" limit="3.55" default="{{picker2}}"></select>
+        <view bind:tap="ToneConvert" class="bt">转调</view>
+    </view>
+</view>
+
+<scroll-view class="scrollarea" scroll-y type="list">
+  <canvas type="2d" id="picShow" style="width: {{canvasWidth}}px; height: {{canvasHeight}}px;" />
+</scroll-view>
+
+<view class="bt topbtn" bind:tap="download" style="display: {{showTools}};">下载</view>

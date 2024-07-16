@@ -1,4 +1,4 @@
-const je=require("./je.js");
+import { Convert, findExtreme, indexToje, simplified } from "./je.js";
 var mode = 0;
 var num = 1;
 var befText = "";
@@ -35,34 +35,34 @@ Component({
     convertByNum(){
       let x=mode?-num:num;
       this.setData({
-        pu: je.Convert(this.data.pu,x)
+        pu: Convert(this.data.pu,x)
       })
     },
     convertByTone(){
-      var x=toTone-fromTone;
+      var x = fromTone - toTone;
       if (x < -5.5) x += 12;
       else if (x > 6.5) x = x - 12;
       this.setData({
-        pu: je.Convert(this.data.pu,x)
+        pu: Convert(this.data.pu,x)
       })
     },
     extremeTone(){
       extreme=extreme.replace(/（/,"(").replace(/）/,")").replace(/ /,"").replace(/【/,"[").replace(/】/,"]");
-      var target=je.findExtreme(extreme)[extremeMode];
+      var target=findExtreme(extreme)[extremeMode];
       this.setData({
-        pu: je.Convert(this.data.pu, target-(extremeMode?highest:lowest))
+        pu: Convert(this.data.pu, target-(extremeMode?highest:lowest))
       })
     },
     extremeShow(){
-      [lowest,highest]=je.findExtreme(this.data.pu);
+      [lowest,highest]=findExtreme(this.data.pu);
       this.setData({
-        lowestTone: lowest==0.1?"???":je.indexToje(lowest),
-        highestTone: highest==0.1?"???":je.indexToje(highest)
+        lowestTone: lowest==0.1?"???":indexToje(lowest),
+        highestTone: highest==0.1?"???":indexToje(highest)
       })
     },
-    simp(){this.setData({pu: je.simplified(this.data.pu)})},
+    simp(){this.setData({pu: simplified(this.data.pu)})},
     upC(){
-      var x = je.Convert(this.data.pu, -1);
+      var x = Convert(this.data.pu, -1);
       var a = ['#1', '#2', '#4', '#5', '#6'];
       var b = ['b2', 'b3', 'b5', 'b6', 'b7'];
       for (let i = 0; i < 5; i++)

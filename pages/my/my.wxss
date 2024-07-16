@@ -16,6 +16,8 @@
   display: flex;
   flex-wrap: wrap;
   width: 45vw;
+  justify-content: center;
+  align-items: center;
 }
 .url{
   width: 45vw;
@@ -24,24 +26,18 @@
   line-height: 20vw;
   border-radius: 40rpx;
   box-shadow: 4rpx 4rpx 10rpx rgba(0, 0, 0, 0.5);
-  margin: 1.5vw 2vw 1.5vw 0px;
+  margin: 1.5vw 0px;
   font-size: 40rpx;
-  background-color: #ffffff;
   transition: background-color 0.15s;
 }
 .url:active{
   background-color: #c1c1ee;
 }
-.tool{
-  width: 45vw;
-  height: 43vw;
-  color: black;
-  font-size: 56rpx;
-  text-align: center;
-  line-height: 43vw;
+.url-theme {
+  background-color: #ffffff;
+}
+.nav-theme {
   background-color: #e0e0ff;
-  border-radius: 40rpx;
-  box-shadow: 4rpx 4rpx 10rpx rgba(0, 0, 0, 0.5);
   font-weight: bold;
 }
 .subtitle{

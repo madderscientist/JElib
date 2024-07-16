@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "select": "../../components/select/select"
+  },
+  "navigationBarTitleText": "简谱图片转调器"
+}

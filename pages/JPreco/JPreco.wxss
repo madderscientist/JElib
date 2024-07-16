@@ -1,0 +1,31 @@
+@import "../../app.wxss";
+page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.lineview {
+  width: 100%;
+  display: flex;
+  margin: 6rpx 0px;
+  align-items: center;
+}
+.bt{
+  margin: 0px 6rpx;
+  flex-grow: 1;
+}
+.topbtn {
+  color: black;
+  font-weight: bold;
+  height: auto;
+  flex: 0;
+  margin: 12rpx 6rpx 6rpx 6rpx;
+}
+.scrollarea {
+  flex: 1;
+  overflow-y: hidden;
+}
+.fw {
+  width: 100%;
+}
