@@ -9,18 +9,17 @@ export function path2canvas(canvas, ctx, path) {
       const imgdata = ctx.getImageData(0, 0, canvas.width, canvas.height);
       resolve(imgdata);
     };
-    pic.onerror = () => {
-      reject();
+    pic.onerror = (e) => {
+      console.log(e);
+      reject(e);
     };
     pic.src = path;
   })
 }
 // ImageData到画布
 export function data2canvas(imgdata, ctx, c) {
-  if (c.width != imgdata.width) {
-    c.width = imgdata.width;
-    c.height = imgdata.height;
-  }
+  c.width = imgdata.width;
+  c.height = imgdata.height;
   ctx.putImageData(imgdata, 0, 0);
 }
 // 保存画布 是异步的 没有做同步的处理

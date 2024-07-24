@@ -25,7 +25,43 @@ Page({
         canvasHeight: 1,
         showTools: 'none',
         // 五度圈
-        ToneArray: [{id:0,label:'C调'},{id:1,label:'G调'},{id:2,label:'D调'},{id:3,label:'A调'},{id:4,label:'E调'},{id:5,label:'B调'},{id:6,label:'F#'},{id:7,label:'C#'},{id:8,label:'Ab'},{id:9,label:'Eb'},{id:10,label:'Bb'},{id:11,label:'F调'}],
+        ToneArray: [{
+            id: 0,
+            label: 'C调'
+        }, {
+            id: 1,
+            label: 'G调'
+        }, {
+            id: 2,
+            label: 'D调'
+        }, {
+            id: 3,
+            label: 'A调'
+        }, {
+            id: 4,
+            label: 'E调'
+        }, {
+            id: 5,
+            label: 'B调'
+        }, {
+            id: 6,
+            label: 'F#'
+        }, {
+            id: 7,
+            label: 'C#'
+        }, {
+            id: 8,
+            label: 'Ab'
+        }, {
+            id: 9,
+            label: 'Eb'
+        }, {
+            id: 10,
+            label: 'Bb'
+        }, {
+            id: 11,
+            label: 'F调'
+        }],
         picker1: 2, // 记录的是五度圈的编号
         picker2: 0
     },
@@ -94,7 +130,8 @@ Page({
             return path2canvas(c, ctx, path);
         }).then((imgdata) => {
             jpreco = new JPreco(imgdata, reco);
-            jpreco.reco().then(() => {
+            jpreco.reco((txt) => true).then((success) => {
+                if (!success) throw new Error("分析失败");
                 data2canvas(jpreco.upx(0), ctx, c);
                 this.updateCanvasSize();
                 // 设置工具可见
@@ -102,6 +139,14 @@ Page({
                     showTools: 'block',
                 });
                 wx.hideLoading();
+            }).catch((e) => {
+                wx.hideLoading();
+                wx.showToast({
+                    title: '分析失败请重试',
+                    icon: 'error',
+                    duration: 2000
+                });
+                console.log(e);
             });
         }).catch((e) => {
             console.log(e);
@@ -141,51 +186,24 @@ Page({
      * 生命周期函数--监听页面初次渲染完成
      */
     onReady() {
-        wx.createSelectorQuery()
-            .select('#picShow')
-            .fields({
-                node: true,
-                size: true
-            })
-            .exec((res) => {
-                c = res[0].node;
-                ctx = c.getContext('2d');
-                // ImageData的初始化
-                jsPic.initImageData(c);
+        wx.createSelectorQuery().select('#picShow').fields({
+            node: true,
+            size: true
+        }).exec((res) => {
+            c = res[0].node;
+            ctx = c.getContext('2d');
+            // ImageData的初始化
+            jsPic.initImageData(c);
+            // 读取图片
+            JPnote.init((path) => {
+                // 不用createOffscreenCanvas是因为不知道为什么返回null:const c = wx.createOffscreenCanvas({type:'2d'}); const ctx = c.getContext('2d');
+                // 路径要以本文件为根源，找相对路径。path是'notes/0.jpg'这样的文件名
+                return path2canvas(c, ctx, './jpnet/' + path);
+            }).then(() => {
+                console.log("notes loaded");
+            }).catch((e)=>{
+                console.log("notes failed", e);
             });
-        // 读取图片
-        JPnote.init(function (path) {
-            const c = wx.createOffscreenCanvas({
-                type: '2d'
-            });
-            const ctx = c.getContext('2d');
-            // 我的天，在这里调用读取那路径就不对了
-            return path2canvas(c, ctx, './jpnet/' + path);
-        });
+        })
     },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow() {},
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide() {},
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload() {},
-    /**
-     * 页面相关事件处理函数--监听用户下拉动作
-     */
-    onPullDownRefresh() {},
-    /**
-     * 页面上拉触底事件的处理函数
-     */
-    onReachBottom() {},
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {}
-})
+});

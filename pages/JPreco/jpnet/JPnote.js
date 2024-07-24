@@ -2,7 +2,7 @@ import jsPic from './jsPic.js'
 
 // 应该先运行JPnote.init()
 export default class JPnote {
-    constructor(numbox, semibox = [], dots = []) {  // 每个box:[x,y,w,h]
+    constructor(numbox, semibox = [], dots = []) { // 每个box:[x,y,w,h]
         this.num = numbox;
         this.semi = semibox;
         this.dots = dots;
@@ -22,7 +22,7 @@ export default class JPnote {
     static notemap = JPnote.notemap_up;
     static semimap = JPnote.semimap_up;
     static switchMode(upMode = true) {
-        if(upMode) {
+        if (upMode) {
             JPnote.notemap = JPnote.notemap_up;
             JPnote.semimap = JPnote.semimap_up;
         } else {
@@ -55,7 +55,7 @@ export default class JPnote {
      * @param {number} lowerRatial 下方第一个点的搜索距离，与数字高度的比例
      * @param {number} refH 参考的高度（一般传递平均高度）。如果不传则为数字的高度
      */
-    matchDots(dots, Xmargin = 1, upperRatial = 0.5, lowerRatial = 1, refH = 0) {   // 要求dots按照x坐标排序 会从dots中删去已经匹配的点
+    matchDots(dots, Xmargin = 1, upperRatial = 0.5, lowerRatial = 1, refH = 0) { // 要求dots按照x坐标排序 会从dots中删去已经匹配的点
         if (Xmargin < 0) Xmargin = this.num[2] >> 1; // 宽度的一半，即只要x和dot有重合则认为是匹配的
         if (upperRatial <= 0) upperRatial = 0.5;
         if (lowerRatial <= 0) lowerRatial = 1;
@@ -64,7 +64,8 @@ export default class JPnote {
         const ybottom = this.num[1] + H;
         const found = [];
         // 用二分法找到第一个横坐标超过center的点
-        let l = 0, r = dots.length - 1;
+        let l = 0,
+            r = dots.length - 1;
         while (l < r) {
             const mid = (l + r) >> 1;
             if (dots[mid][0] <= xcenter + Xmargin) l = mid + 1;
@@ -72,16 +73,16 @@ export default class JPnote {
         }
         const xOK = [];
         for (l = l - 1; l >= 0 && dots[l][0] + dots[l][2] >= xcenter - Xmargin; l--) {
-            xOK.push([dots[l][1] + (dots[l][3] >> 1) - ybottom, l]);    // 以数字下边缘为原点
+            xOK.push([dots[l][1] + (dots[l][3] >> 1) - ybottom, l]); // 以数字下边缘为原点
         }
-        xOK.sort((a, b) => a[0] - b[0]);    // 按y坐标排序
+        xOK.sort((a, b) => a[0] - b[0]); // 按y坐标排序
         // 找到第一个大于零的点
         for (l = 0; l < xOK.length && xOK[l][0] <= 0; l++);
-        const addedId = [];     // 记录哪些被选中了，从dots中删除。必须先记录再删除，不然索引会乱
+        const addedId = []; // 记录哪些被选中了，从dots中删除。必须先记录再删除，不然索引会乱
         // 先检查上面的
         r = l - 1;
-        while (r >= 0 && xOK[r][0] + H > 0) r--;   // 略过在数字内的点
-        let threshold = H * (1 + upperRatial) | 0;  // (1+0.5) 上边的点靠得普遍近 和数字上边缘的距离
+        while (r >= 0 && xOK[r][0] + H > 0) r--; // 略过在数字内的点
+        let threshold = H * (1 + upperRatial) | 0; // (1+0.5) 上边的点靠得普遍近 和数字上边缘的距离
         for (; r >= 0; r--) {
             if (xOK[r][0] + threshold >= 0) {
                 const thedot = dots[xOK[r][1]];
@@ -90,8 +91,8 @@ export default class JPnote {
                 threshold = H * 0.4 - xOK[r][0] | 0;
             } else break;
         }
-        if (found.length == 0) {    // 如果上方没有找到则检查下面的
-            threshold = Math.ceil(H * lowerRatial);      // 距离数字下边缘的距离
+        if (found.length == 0) { // 如果上方没有找到则检查下面的
+            threshold = Math.ceil(H * lowerRatial); // 距离数字下边缘的距离
             for (r = l; r < xOK.length; r++) {
                 if (xOK[r][0] <= threshold) {
                     const thedot = dots[xOK[r][1]];
@@ -113,14 +114,15 @@ export default class JPnote {
      */
     updateBox() {
         let [left, top, nw, nh] = this.num;
-        let right = left + nw, bottom = top + nh;
+        let right = left + nw,
+            bottom = top + nh;
         if (this.hasSemi()) {
             let [sx, sy, sw, sh] = this.semi;
             left = Math.min(left, sx);
             right = Math.max(right, sx + sw);
             top = Math.min(top, sy);
             bottom = Math.max(bottom, sy + sh);
-        } else {    // 可以考虑所有的升降号全部用默认的位置
+        } else { // 可以考虑所有的升降号全部用默认的位置
             let semiH = 0.8 * this.num[3] | 0;
             let semiW = 0.4 * semiH | 0;
             this.semi = [this.num[0] - semiW, this.num[1] - (semiH >> 1), semiW, semiH];
@@ -159,7 +161,8 @@ export default class JPnote {
         const pic3 = JSPIC.channel[2];
         const emptybox = (box) => {
             let [x, y, w, h] = box;
-            w = x + w; h = y + h;
+            w = x + w;
+            h = y + h;
             while (y <= h) {
                 const row1 = pic1[y];
                 const row2 = pic2[y];
@@ -168,7 +171,8 @@ export default class JPnote {
                     row1[i] = 255;
                     row2[i] = 255;
                     row3[i] = 255;
-                } y++;
+                }
+                y++;
             }
         }
         emptybox(this.num);
@@ -209,21 +213,17 @@ export default class JPnote {
         'notes/5.jpg',
         'notes/6.jpg',
         'notes/7.jpg',
-        'notes/8.jpg',    // 升记号
-        'notes/9.jpg',    // 降记号
-        'notes/10.jpg',   // 还原
-        'notes/11.jpg'    // 点
+        'notes/8.jpg', // 升记号
+        'notes/9.jpg', // 降记号
+        'notes/10.jpg', // 还原
+        'notes/11.jpg' // 点
     ];
-    static init(path2imgdata) {
-        let promises = Array.from(JPnote.notePic, (path, id) => new Promise((resolve) => {
-            path2imgdata(path).then((imgdata) => {
-                resolve(new jsPic().fromImageData(imgdata, 'RGB'));
-            });
-        }));
-        // 等到全部完成，返回jspic列表
-        Promise.all(promises).then((arr) => {
-            JPnote.notePic = arr;
-            console.log("notes loaded");
-        });
+    // 小程序退出页面再进入，被我覆盖的JPnote.notePic不会清空，所以需要判断类型
+    static async init(path2imgdata) {
+        for (let i = 0; i < JPnote.notePic.length; i++) {
+            const path = JPnote.notePic[i];
+            if(typeof path === 'string')
+                JPnote.notePic[i] = new jsPic().fromImageData(await path2imgdata(path), 'RGB');
+        } return JPnote.notePic;
     }
 }

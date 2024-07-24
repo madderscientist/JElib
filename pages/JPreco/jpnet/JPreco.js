@@ -21,8 +21,10 @@ export class JPreco {
         this.notes = null;
     }
 
-    async reco() {
+    async reco(stepfun = async (txt)=>true) {
+        if(!await stepfun("开始")) return false;
         let [succset, failset] = JPrecoTools.findChar(this.base);
+        if(!await stepfun("定位")) return false;
         let pic = this.base.convert('L');   // 用于识别的
         pic.throughChannel(0, (x) => 255 - x);
         {   // 第一次识别
@@ -30,12 +32,16 @@ export class JPreco {
             succset = s;
             failset.push(...f);
         }
+        if(!await stepfun("第一次识别")) return false;
         // 统计形状和位置信息
         let [H, Y] = JPrecoTools.staticYH(succset);
+        if(!await stepfun("统计")) return false;
         {   // 二次识别
             let [reduce_succ, reduce_failed] = JPrecoTools.reduceBox(H, Y, succset);
             let [add_succ, add_failed] = JPrecoTools.addBox(H, Y, failset);
+            if(!await stepfun("重定位")) return false;
             let [s, f] = await JPrecoTools.recoSet(pic, add_succ, this.reco1);
+            if(!await stepfun("二次识别")) return false;
             const estiW = H * 0.8;
             failset = JPrecoTools.nms([...reduce_failed, ...add_failed, ...f], (box1, box2) => {
                 let over = JPrecoTools.overlap(box1, box2);
@@ -46,10 +52,13 @@ export class JPreco {
                 return over > 4;
             });
             succset = [...reduce_succ, ...s];
-        }
+        } if(!await stepfun("nms")) return false;
         // 合并音符
         this.notes = JPrecoTools.join(succset, failset, H);
+        if(!await stepfun("join")) return false;
         this.empty = JPrecoTools.iniEmpty(this.base, this.notes);
+        if(!await stepfun("结束")) return false;
+        return true;
     }
 
     upx(by = 0) {
@@ -108,7 +117,7 @@ export class JPrecoTools {
             }
             let result = await reco(cropped);
             // 将识别结果用绿色绘制在succset[i]的位置上
-            if (result == 11) {
+            if (result == 11 || result == 0) {
                 failedset.push(box);
                 continue;
             }
@@ -299,6 +308,7 @@ export class JPrecoTools {
                 const maxX = box[0] + (box[2] << 1);
                 const threshold = 1 + ((box[2] + box[3]) >> 1);
                 let j = i + 1;
+                let ifmatched = false;
                 while (j < succset.length && succset[j][0] < maxX) {
                     if (succset[j][4] > 0 && succset[j][4] <= 7) {
                         // 求解距离 用符号的右边中心点和数字的左顶点之间的距离，用曼哈顿距离减少计算量
@@ -306,10 +316,12 @@ export class JPrecoTools {
                         if (dis <= threshold) {
                             notes.push(new JPnote(succset[j], box));
                             succset.splice(j, 1);
+                            ifmatched = true;
                             break;
                         }
                     } j = j + 1;
                 }
+                if(!ifmatched) failset.push(box);
             } else {
                 notes.push(new JPnote(box));
             }

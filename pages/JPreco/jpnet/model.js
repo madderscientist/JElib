@@ -10,48 +10,52 @@ export async function loadModel() {
         title: '模型加载中',
         mask: true
     });
-    // 尝试3次
-    const tryTimes = 3;
-    let i = 0;
-    for(; i < tryTimes; i++) {
-        if(await saveModel()) break;
-    }
-    if(i == tryTimes) {
+    if (!await saveModel()) {
         wx.hideLoading();
         wx.showToast({
             title: "模型加载失败！",
             duration: 2000,
             icon: "error"
-        });
-        return;
+        }); return;
     }
-    model = wx.createInferenceSession({
-        model: modelPath,
-        precisionLevel: 4,  // 直接用最高精度，不然结果有出入
-        allowNPU: false, // 是否使用 NPU 推理，仅针对 IOS 有效
-        allowQuantize: false, // 是否产生量化模型
-    });
-    // 监听error事件
-    model.onError((error) => {
-        console.error(error);
-        wx.hideLoading();
-        wx.showToast({
-            title: "模型加载失败！",
-            duration: 2000,
-            icon: "error"
-        });
-    });
-    // 监听模型加载完成事件
-    model.onLoad(() => {
+    function succ() {
         console.log('session loaded');
-        wx.hideLoading(); // 加载前需要展示loading
+        wx.hideLoading();
         wx.showToast({
-          title: "模型加载成功！",
-          duration: 800,
-          icon: "success"
-      });
+            title: "模型加载成功！",
+            duration: 800,
+            icon: "success"
+        });
+    }
+    AIcontext().then(succ).catch(async (e) => {
+        console.error(e);
+        await saveModel(true);      // 首先怀疑是否是文件损坏，强制重新下载
+        AIcontext().then(succ).catch((e)=>{
+            wx.hideLoading();
+            wx.showToast({
+                title: "模型加载失败！",
+                duration: 2000,
+                icon: "error"
+            });
+        });
     });
 }
+
+function AIcontext() {  // Promise封装
+    return new Promise((resolve, reject) => {
+        model = wx.createInferenceSession({
+            model: modelPath,
+            precisionLevel: 4, // 直接用最高精度，不然结果有出入
+            allowNPU: false, // 是否使用 NPU 推理，仅针对 IOS 有效
+            allowQuantize: false, // 是否产生量化模型
+        });
+        // 监听error事件
+        model.onError(reject);
+        // 监听模型加载完成事件
+        model.onLoad(resolve);
+    })
+}
+
 export async function reco(jspic) {
     const input = new Float32Array(expandJspic(jspic));
     const results = await model.run({
@@ -93,13 +97,8 @@ function argmax(arr) {
 // 由于onnx不能被直接加载，所以需要将模型保存到本地
 async function saveModel(forceLoad = false) {
     try {
-        if(forceLoad) await write(jpnet.buffer, modelPath);
-        let i = 0;
-        for(; i < 5; i++) {
-            if(await checkExist(modelPath)) break;
-            await write(jpnet.buffer, modelPath);
-        }
-        return i < 5;
+        if(forceLoad || !await checkExist(modelPath)) await write(jpnet.buffer, modelPath);
+        return await checkExist(modelPath);
     } catch (e) {
         console.error(e);
         return false;
